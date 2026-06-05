@@ -12,38 +12,73 @@ def create_features(df):
         "Tool wear [min]"
     ]
 
-    windows = [1, 6, 12]
-
     for col in sensor_cols:
 
-        # Rolling Mean
-        for w in windows:
-            df[f"{col}_roll_mean_{w}"] = (
-                df[col]
-                .rolling(window=w, min_periods=1)
-                .mean()
-            )
+        # ----------------------------------
+        # Rolling Mean (1h, 6h, 12h)
+        # ----------------------------------
 
-        # Rolling Standard Deviation
-        for w in windows:
-            df[f"{col}_roll_std_{w}"] = (
-                df[col]
-                .rolling(window=w, min_periods=1)
-                .std()
-            )
+        df[f"{col}_mean_1h"] = (
+            df[col]
+            .rolling(window=1, min_periods=1)
+            .mean()
+        )
 
+        df[f"{col}_mean_6h"] = (
+            df[col]
+            .rolling(window=6, min_periods=1)
+            .mean()
+        )
+
+        df[f"{col}_mean_12h"] = (
+            df[col]
+            .rolling(window=12, min_periods=1)
+            .mean()
+        )
+
+        # ----------------------------------
+        # Standard Deviation (1h, 6h, 12h)
+        # ----------------------------------
+
+        df[f"{col}_std_1h"] = (
+            df[col]
+            .rolling(window=1, min_periods=1)
+            .std()
+        )
+
+        df[f"{col}_std_6h"] = (
+            df[col]
+            .rolling(window=6, min_periods=1)
+            .std()
+        )
+
+        df[f"{col}_std_12h"] = (
+            df[col]
+            .rolling(window=12, min_periods=1)
+            .std()
+        )
+
+        # ----------------------------------
         # Exponential Moving Average
+        # ----------------------------------
+
         df[f"{col}_ema"] = (
             df[col]
             .ewm(span=6, adjust=False)
             .mean()
         )
 
+        # ----------------------------------
         # Lag Features
+        # ----------------------------------
+
         df[f"{col}_lag_1"] = df[col].shift(1)
         df[f"{col}_lag_2"] = df[col].shift(2)
 
-    # Handle NaN values
+    # ----------------------------------
+    # Handle Missing Values
+    # ----------------------------------
+
     df = df.bfill()
     df = df.ffill()
     df = df.fillna(0)
@@ -66,7 +101,6 @@ if __name__ == "__main__":
     print("Feature Engineering Completed")
     print("Shape:", df.shape)
 
-    # Check remaining NaNs
     print("Remaining NaNs:", df.isna().sum().sum())
 
     joblib.dump(
