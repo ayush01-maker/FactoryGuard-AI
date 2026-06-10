@@ -4,8 +4,8 @@ IoT Predictive Maintenance Engine using Machine Learning
 
 ## Team Members
 - Ayush Bhaskar
-- Ansha
-- Indu
+- Ansha T V
+- Mande Indu
 
 ## Project Overview
 FactoryGuard AI predicts equipment failures using sensor data such as temperature, pressure, and vibration.
@@ -23,4 +23,3 @@ FactoryGuard AI predicts equipment failures using sensor data such as temperatur
 - Scikit-Learn
 - XGBoost
 - SHAP
-- Google Colab
